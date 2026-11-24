@@ -50,7 +50,7 @@ taken verbatim from the CNCF CBA curriculum, so your study maps 1:1 to the exam.
 - [03 — Catalog](03-catalog.md) — entities, `catalog-info.yaml`, annotations, ingestion
 - [04 — Customizing](04-customizing.md) — plugins, React, Material UI
 - [Cheat Sheet](cheatsheet.md) — quick reference for last-minute review
-- [Practice Questions](practice-questions.md) — self-test
+- [Practice Questions](practice-questions.md) — 86 self-test questions (short-answer + exam-style multiple choice)
 
 ## Primary sources
 

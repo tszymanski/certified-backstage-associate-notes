@@ -81,3 +81,425 @@ Answers are at the bottom. Cover them and self-test.
 27. **`backstage.io/techdocs-ref`**.
 28. **Generator → Publisher → Storage**.
 29. **MkDocs** (configured via `mkdocs.yml`).
+
+---
+
+# Part 2 — Multiple choice (exam style)
+
+The real exam is multiple-choice, so this part mirrors that format. Questions are
+weighted roughly like the exam domains. Answers with short explanations are at the
+bottom of this part.
+
+## Development Workflow
+
+30. In CI, which command installs dependencies **and fails** if `yarn.lock` would change?
+    - A) `yarn install --frozen`
+    - B) `yarn install --immutable`
+    - C) `npm ci --strict`
+    - D) `yarn add --lockfile`
+
+31. The scripts in a Backstage app's `package.json` (e.g. `package start`, `package build`) are provided by which tool?
+    - A) `backstage-cli`
+    - B) `webpack-cli`
+    - C) `nx`
+    - D) `lerna`
+
+32. What does `yarn tsc` do in a Backstage repo?
+    - A) Builds the Docker image
+    - B) Runs the unit tests
+    - C) Type-checks the project and emits type declarations used by later build steps
+    - D) Starts the frontend dev server
+
+33. What is the correct order for a **host build** of a Backstage backend image?
+    - A) `docker image build` → `yarn tsc` → `yarn build:backend`
+    - B) `yarn build:backend` → `yarn install` → `yarn tsc`
+    - C) `yarn tsc` → `docker image build` → `yarn install --immutable`
+    - D) `yarn install --immutable` → `yarn tsc` → `yarn build:backend` → `docker image build`
+
+34. What is the main advantage of a **multi-stage** Docker build over a host build?
+    - A) The build is reproducible without Node.js/Yarn installed on the host
+    - B) It removes the need for `app-config.yaml`
+    - C) It switches the database to SQLite automatically
+    - D) It makes the frontend run on port 7007
+
+35. Where does `yarn new` place a newly scaffolded plugin?
+    - A) `packages/app/src/plugins/`
+    - B) `packages/backend/plugins/`
+    - C) `node_modules/@internal/`
+    - D) The top-level `plugins/` directory
+
+36. A package is named `@acme/plugin-billing-backend`. What is it?
+    - A) A frontend plugin
+    - B) A backend plugin
+    - C) A shared isomorphic library
+    - D) A frontend React library for other plugins
+
+37. Which package suffix is used for code (e.g. types) shared by **both** frontend and backend?
+    - A) `-react`
+    - B) `-node`
+    - C) `-common`
+    - D) `-backend`
+
+38. Which config file is intended for a developer's **local overrides** and is usually not committed?
+    - A) `app-config.local.yaml`
+    - B) `app-config.yaml`
+    - C) `app-config.production.yaml`
+    - D) `catalog-info.yaml`
+
+39. Which command upgrades all `@backstage/*` packages in an app to a newer release?
+    - A) `yarn upgrade backstage`
+    - B) `npx @backstage/create-app --upgrade`
+    - C) `yarn backstage-cli versions:bump`
+    - D) `yarn new --bump`
+
+40. After `yarn start` succeeds, which URL do you open to use the portal?
+    - A) http://localhost:7007
+    - B) http://localhost:3000
+    - C) http://localhost:8080
+    - D) http://localhost:5000
+
+41. You run an image built from the default `packages/backend/Dockerfile`. Which port do you publish?
+    - A) 3000
+    - B) 80
+    - C) 8080
+    - D) 7007
+
+## Infrastructure
+
+42. Backstage is started with `--config app-config.yaml --config app-config.production.yaml`, and both set `backend.baseUrl`. Which value is used?
+    - A) The one in `app-config.yaml`
+    - B) Startup fails with a conflict error
+    - C) The one in `app-config.production.yaml`
+    - D) The two values are concatenated
+
+43. How can you override `app.baseUrl` with an environment variable, without editing any file?
+    - A) `BACKSTAGE_APP_BASEURL=...`
+    - B) `APP_CONFIG_app_baseUrl=...`
+    - C) `CONFIG__app__baseUrl=...`
+    - D) It is not possible
+
+44. A config value must be readable by the **frontend**. How is that declared?
+    - A) Put it in `app-config.frontend.yaml`
+    - B) Prefix the key with `public.`
+    - C) Nothing — the frontend can read all config
+    - D) Mark it with `@visibility frontend` in the plugin's config schema
+
+45. How do backend plugins communicate with each other?
+    - A) Over the network (HTTP)
+    - B) By importing each other's code directly
+    - C) Through shared memory
+    - D) By routing calls through the frontend
+
+46. By default, under which path does the backend expose a plugin's HTTP routes?
+    - A) `/backend/<pluginId>`
+    - B) `/plugins/<pluginId>`
+    - C) `/api/<pluginId>`
+    - D) `/<pluginId>/v1`
+
+47. A frontend plugin must call a third-party Jenkins API, but the browser blocks it due to CORS. What is the Backstage way to fix this?
+    - A) Configure a proxy endpoint and call it via the backend's `/api/proxy/...`
+    - B) Ask users to disable CORS in their browsers
+    - C) Register Jenkins as a Component in the catalog
+    - D) Switch the database to SQLite
+
+48. Which library does Backstage use for database access?
+    - A) Prisma
+    - B) TypeORM
+    - C) Sequelize
+    - D) Knex
+
+49. Why does each backend plugin get its own **logical database**?
+    - A) SQLite requires it
+    - B) Plugins can run their own migrations independently and stay isolated
+    - C) It makes queries faster
+    - D) It is required for licensing reasons
+
+50. You run several backend replicas in production. Which cache store fits best?
+    - A) In-memory
+    - B) SQLite
+    - C) Redis (or Memcache/Valkey)
+    - D) The local filesystem
+
+51. How do you scale the Backstage backend horizontally?
+    - A) Run multiple backend instances against the same PostgreSQL database
+    - B) Give each instance its own SQLite file
+    - C) Run several frontends against one backend
+    - D) It cannot be scaled
+
+52. In the new backend system, where are backend plugins wired in?
+    - A) `packages/app/src/App.tsx`
+    - B) `app-config.yaml` under `backend.plugins`
+    - C) `plugins/index.ts`
+    - D) `packages/backend/src/index.ts` with `createBackend()` and `backend.add(...)`
+
+53. Logging, database, config and cache are examples of what in the backend system?
+    - A) Extension points
+    - B) Services
+    - C) Modules
+    - D) Entity providers
+
+54. What are **Utility APIs** on the frontend used for?
+    - A) Running database migrations
+    - B) Defining catalog entity kinds
+    - C) Plugin-to-plugin communication and swapping implementations (e.g. a custom API client)
+    - D) Building Docker images
+
+## Catalog
+
+55. What is the full entity reference for the Component `artist-web` in the default namespace?
+    - A) `default/component/artist-web`
+    - B) `component:default/artist-web`
+    - C) `artist-web.component.default`
+    - D) `component/artist-web@default`
+
+56. Two different `catalog-info.yaml` files both define a `Component` named `payments` in the `default` namespace. What happens?
+    - A) The catalog keeps one and reports a conflict error for the other
+    - B) Both entities appear in the catalog
+    - C) The two are merged into one entity
+    - D) The catalog backend crashes
+
+57. Which annotation does the catalog add automatically to show where an entity was ingested from?
+    - A) `backstage.io/source-repo`
+    - B) `backstage.io/origin`
+    - C) `backstage.io/managed-by-location`
+    - D) `backstage.io/techdocs-ref`
+
+58. Why is `metadata.name: Payments Service V2` rejected?
+    - A) Names must be lowercase only
+    - B) Names cannot contain digits
+    - C) Names must start with the kind
+    - D) Spaces are not allowed in names
+
+59. Which `spec` field links a Component to the System it belongs to?
+    - A) `system`
+    - B) `partOf`
+    - C) `domain`
+    - D) `parent`
+
+60. A Component exposes a REST API described by an OpenAPI file. How is that modelled?
+    - A) Put the OpenAPI file in the Component's `metadata.annotations`
+    - B) Create an `API` entity (`type: openapi`) and list it in the Component's `spec.providesApis`
+    - C) Set the Component's `spec.type: openapi`
+    - D) Create a `Resource` entity of type `api`
+
+61. Which required `spec` field does an `API` entity have that a `Component` does not?
+    - A) `owner`
+    - B) `lifecycle`
+    - C) `type`
+    - D) `definition`
+
+62. A Component has `spec.owner: platform` (no kind given). Which kind does the catalog assume?
+    - A) `Group`
+    - B) `User`
+    - C) `System`
+    - D) `Domain`
+
+63. Which configuration controls which entity **kinds** may be ingested from a location?
+    - A) `catalog.kinds`
+    - B) `catalog.rules`
+    - C) `catalog.filters`
+    - D) `integrations.allowKinds`
+
+64. The catalog shows an entity as **orphaned**. What most likely happened?
+    - A) Its owner Group was deleted
+    - B) It has no TechDocs
+    - C) The location that produced it no longer contains it (or was removed)
+    - D) Its `lifecycle` is `deprecated`
+
+65. You want every new repo in your GitHub organization to appear in the catalog automatically. What do you set up?
+    - A) A static location for each repo in `app-config.yaml`
+    - B) A scaffolder template
+    - C) A TechDocs publisher
+    - D) A GitHub discovery entity provider
+
+66. An entity's owner link is broken and shows as unresolved. What is the most likely cause?
+    - A) The referenced Group does not exist in the catalog
+    - B) The entity has no tags
+    - C) The `apiVersion` is wrong
+    - D) The backend uses SQLite
+
+67. Where should you store a PagerDuty service ID for a Component?
+    - A) `metadata.labels`
+    - B) `metadata.tags`
+    - C) `metadata.annotations`
+    - D) `spec.owner`
+
+68. What is a `Location` entity with several `targets` used for?
+    - A) Defining where the backend is deployed
+    - B) Pointing to multiple other descriptor files so they are ingested too
+    - C) Setting a user's office location
+    - D) Configuring TechDocs storage
+
+## Customizing
+
+69. You want a new **"Costs" tab** on the entity page for services. Which file do you edit?
+    - A) `packages/app/src/components/catalog/EntityPage.tsx`
+    - B) `packages/backend/src/index.ts`
+    - C) `app-config.yaml`
+    - D) `catalog-info.yaml`
+
+70. A card should appear only on Components of type `service`. What do you use?
+    - A) An `if` block in `app-config.yaml`
+    - B) A catalog rule
+    - C) `<EntitySwitch>` with `<EntitySwitch.Case if={isComponentType('service')}>`
+    - D) A label selector in `catalog-info.yaml`
+
+71. Where do you add a new item to the left-hand **sidebar**?
+    - A) `packages/app/src/apis.ts`
+    - B) `packages/app/src/components/Root/Root.tsx`
+    - C) `packages/backend/src/index.ts`
+    - D) `mkdocs.yml`
+
+72. How do you make a new frontend plugin page available at `/tech-radar`?
+    - A) Add it to `catalog.locations`
+    - B) Add it with `backend.add(...)`
+    - C) Create a `Location` entity
+    - D) Add a `<Route path="/tech-radar" element={...} />` in `App.tsx`
+
+73. Inside a React component, how do you read a config value?
+    - A) `useApi(configApiRef)` and then `config.getString(...)`
+    - B) `process.env.APP_CONFIG`
+    - C) `fs.readFileSync('app-config.yaml')`
+    - D) `import config from 'app-config.yaml'`
+
+74. How do you add a **custom scaffolder action** in the new backend system?
+    - A) Edit the scaffolder plugin's source in `node_modules`
+    - B) Write a backend **module** that registers a `createTemplateAction(...)` via the scaffolder actions extension point
+    - C) Add the action to `app-config.yaml` under `scaffolder.actions`
+    - D) Create a frontend plugin
+
+75. How do you add a custom **entity provider** to the catalog?
+    - A) Write a frontend plugin that posts entities
+    - B) Add a `Location` with `type: provider`
+    - C) Write a backend module using the catalog processing extension point (`addEntityProvider`)
+    - D) Edit `EntityPage.tsx`
+
+76. Which functions create a backend plugin and a backend module?
+    - A) `createPlugin` / `createExtension`
+    - B) `createApp` / `createRouteRef`
+    - C) `createRouter` / `createService`
+    - D) `createBackendPlugin` / `createBackendModule`
+
+77. A backend plugin needs a logger and a database connection. How does it get them?
+    - A) It declares dependencies on core services (e.g. `coreServices.logger`, `coreServices.database`)
+    - B) It creates its own Knex connection from environment variables
+    - C) It imports them from the frontend
+    - D) It reads them from `catalog-info.yaml`
+
+78. How do you change the portal's brand colors and fonts?
+    - A) Edit the compiled CSS in `dist/`
+    - B) Set `app.colors` in `app-config.yaml`
+    - C) Create a custom theme and pass it to the app via the `themes` option
+    - D) Add a `theme` annotation to each entity
+
+79. Which MUI API creates hook-based styles inside a Backstage plugin component?
+    - A) `makeStyles`
+    - B) `styled-jsx`
+    - C) `createGlobalStyle`
+    - D) `StyleSheet.create`
+
+80. Which MUI component lays out cards in responsive columns?
+    - A) `Typography`
+    - B) `Grid` (with `container` and `item`)
+    - C) `Button`
+    - D) `Tooltip`
+
+81. `Page`, `Header`, `Content` and `InfoCard` come from which package?
+    - A) `@material-ui/core`
+    - B) `@backstage/plugin-catalog`
+    - C) `@backstage/core-components`
+    - D) `@backstage/cli`
+
+82. A template form needs a dropdown of existing Groups for choosing the owner. What do you use?
+    - A) `type: enum` with hardcoded team names only
+    - B) A `catalog:fetch` step
+    - C) `output.links`
+    - D) The `OwnerPicker` field extension (`ui:field: OwnerPicker`)
+
+83. How does a later template step use the `remoteUrl` output of a step with `id: publish`?
+    - A) `${{ steps.publish.output.remoteUrl }}`
+    - B) `${{ parameters.publish.remoteUrl }}`
+    - C) `$steps.publish.remoteUrl`
+    - D) `{{ output.remoteUrl }}`
+
+84. What is the recommended TechDocs setup for production?
+    - A) `techdocs.builder: 'local'`, building docs on every page view
+    - B) `techdocs.builder: 'external'`, with CI running `techdocs-cli generate` and `publish` to cloud storage
+    - C) Commit the generated HTML into each repo
+    - D) Store docs in the catalog database
+
+85. Which MkDocs plugin must a TechDocs site enable in `mkdocs.yml`?
+    - A) `search`
+    - B) `material`
+    - C) `backstage`
+    - D) `techdocs-core`
+
+86. A Component has `backstage.io/techdocs-ref: dir:.`, but its Docs tab shows an error. What is the most likely cause?
+    - A) The repo has no `mkdocs.yml` or `docs/` directory
+    - B) The Component has no tags
+    - C) The backend runs on port 7007
+    - D) The Component's `lifecycle` is `experimental`
+
+---
+
+## Part 2 answers
+
+| # | Ans | Why |
+|---|-----|-----|
+| 30 | B | `--immutable` is the Yarn (Berry) flag for CI installs. |
+| 31 | A | `@backstage/cli` (`backstage-cli`) drives build, start, test and lint. |
+| 32 | C | `tsc` type-checks the repo and outputs declarations into `dist-types`. |
+| 33 | D | Install → type-check → bundle backend → build the image. |
+| 34 | A | Everything is built inside the container, so the host needs only Docker. |
+| 35 | D | Local plugins live in `plugins/`. |
+| 36 | B | The `-backend` suffix marks a backend plugin. |
+| 37 | C | `-common` is isomorphic; `-react` is for frontend libs, `-node` for backend libs. |
+| 38 | A | `app-config.local.yaml` is for personal overrides and is usually gitignored. |
+| 39 | C | `backstage-cli versions:bump` bumps every `@backstage/*` dependency. |
+| 40 | B | In dev, the frontend runs on :3000 and the backend on :7007. |
+| 41 | D | In that image the backend also serves the frontend bundle, on :7007. |
+| 42 | C | Later config files override earlier ones. |
+| 43 | B | `APP_CONFIG_` + path segments joined with `_`. |
+| 44 | D | Only values marked `@visibility frontend` are sent to the browser. |
+| 45 | A | Backend plugins are isolated and talk only over the network. |
+| 46 | C | Each plugin's router is mounted at `/api/<pluginId>`. |
+| 47 | A | The proxy forwards the call server-side, so CORS doesn't apply. |
+| 48 | D | Database access goes through the Knex query builder. |
+| 49 | B | Each plugin owns its schema and migrations. |
+| 50 | C | A shared cache works across replicas; in-memory does not. |
+| 51 | A | Stateless backends share one PostgreSQL database. |
+| 52 | D | `createBackend()`, then `backend.add(import(...))`, then `backend.start()`. |
+| 53 | B | These are core services injected into plugins and modules. |
+| 54 | C | Utility APIs are interfaces with swappable implementations. |
+| 55 | B | Format is `kind:namespace/name`. |
+| 56 | A | Name + kind + namespace must be unique; the second one gets a conflict error. |
+| 57 | C | `backstage.io/managed-by-location` (also `managed-by-origin-location`). |
+| 58 | D | Only `[a-zA-Z0-9]` with `-`, `_`, `.` separators, max 63 characters. |
+| 59 | A | `spec.system`; a System then links to a Domain via its own `spec.domain`. |
+| 60 | B | APIs are their own entities, linked by `providesApis` / `consumesApis`. |
+| 61 | D | `definition` holds the spec (OpenAPI, AsyncAPI, GraphQL, gRPC). |
+| 62 | A | `owner` defaults to kind `Group`; use `user:jdoe` for a person. |
+| 63 | B | `catalog.rules` (and per-location `rules`) set the allowed kinds. |
+| 64 | C | Orphans have lost their parent location (`catalog.orphanStrategy` can delete them). |
+| 65 | D | Discovery providers scan the org for `catalog-info.yaml` files. |
+| 66 | A | References must point to existing entities, so ingest your org's Groups and Users. |
+| 67 | C | IDs of external systems go in annotations. |
+| 68 | B | A Location fans out to other descriptor files. |
+| 69 | A | Add an `<EntityLayout.Route path="/costs" title="Costs">` there. |
+| 70 | C | `EntitySwitch` renders conditionally by kind or type. |
+| 71 | B | The sidebar is defined in `Root.tsx`. |
+| 72 | D | Frontend routes are declared in `App.tsx`. |
+| 73 | A | Config reaches React components through the `configApiRef` Utility API. |
+| 74 | B | Modules extend a plugin through its extension points. |
+| 75 | C | Same pattern, using the catalog's processing extension point. |
+| 76 | D | `createBackendPlugin` and `createBackendModule` from `@backstage/backend-plugin-api`. |
+| 77 | A | Dependencies are injected from `coreServices`. |
+| 78 | C | Themes are built in code and passed to the app. |
+| 79 | A | `makeStyles` returns a `useStyles` hook. |
+| 80 | B | `Grid container` holds `Grid item`s with breakpoints like `xs` and `md`. |
+| 81 | C | `@backstage/core-components` provides Backstage's own UI building blocks. |
+| 82 | D | Field extensions such as `OwnerPicker`, `EntityPicker` and `RepoUrlPicker` query the catalog. |
+| 83 | A | Templates reference step outputs as `steps.<id>.output.<key>`. |
+| 84 | B | Building docs in CI keeps the backend light; `local` is for dev. |
+| 85 | D | `techdocs-core` bundles the plugins TechDocs needs. |
+| 86 | A | `dir:.` means "build from this repo", which needs `mkdocs.yml` and `docs/`. |
